@@ -1,0 +1,353 @@
+
+    <!DOCTYPE html>
+    <html lang="ar" dir="rtl">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>فهرس مكتبة التصميم</title>
+        <style>
+            :root {
+                --primary-color: #2196F3;
+                --secondary-color: #1976D2;
+                --background-color: #f5f5f5;
+                --border-color: #e0e0e0;
+                --text-color: #333;
+            }
+
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background-color: var(--background-color);
+                color: var(--text-color);
+                line-height: 1.6;
+                padding-top: 80px;
+            }
+
+            .main-header {
+                background-color: white;
+                padding: 20px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                margin-bottom: 30px;
+                text-align: center;
+            }
+
+            .folder-section {
+                background-color: white;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                margin: 20px auto;
+                max-width: 1200px;
+                padding: 20px;
+            }
+
+            .folder-header {
+                margin-bottom: 20px;
+                text-align: center;
+            }
+
+            .folder-header h2 {
+                color: var(--primary-color);
+                margin-bottom: 10px;
+            }
+
+            .folder-stats {
+                color: #666;
+                font-size: 0.9em;
+            }
+
+            .folder-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+            }
+
+            .folder-table th {
+                background-color: var(--primary-color);
+                color: white;
+                padding: 12px;
+                text-align: right;
+            }
+
+            .folder-table td {
+                padding: 12px;
+                border: 1px solid var(--border-color);
+            }
+
+            .folder-info {
+                padding: 10px 0;
+            }
+
+            .folder-name {
+                font-size: 1.1em;
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+
+            .folder-details {
+                color: #666;
+                font-size: 0.9em;
+                margin-bottom: 5px;
+            }
+
+            .folder-extensions {
+                font-size: 0.85em;
+                color: #888;
+            }
+
+            .folder-link {
+                display: inline-block;
+                padding: 8px 16px;
+                background-color: var(--primary-color);
+                color: white;
+                text-decoration: none;
+                border-radius: 4px;
+                transition: background-color 0.3s;
+            }
+
+            .folder-link:hover {
+                background-color: var(--secondary-color);
+            }
+
+            .separator {
+                margin: 0 8px;
+                color: #ccc;
+            }
+
+            #searchContainer {
+                position: fixed;
+                top: 0;
+                right: 0;
+                left: 0;
+                background-color: white;
+                padding: 15px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                z-index: 1000;
+                text-align: center;
+            }
+
+            #searchInput {
+                width: 50%;
+                padding: 10px 15px;
+                border: 2px solid var(--border-color);
+                border-radius: 4px;
+                font-size: 1em;
+                transition: border-color 0.3s;
+            }
+
+            #searchInput:focus {
+                outline: none;
+                border-color: var(--primary-color);
+            }
+
+            #clearSearch {
+                padding: 10px 20px;
+                margin-right: 10px;
+                background-color: #f44336;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+
+            #clearSearch:hover {
+                background-color: #d32f2f;
+            }
+
+            .highlight {
+                background-color: #fff176;
+                padding: 2px;
+                border-radius: 2px;
+            }
+
+            .index-cell {
+                width: 80px;
+                text-align: center;
+            }
+
+            .link-cell {
+                width: 120px;
+                text-align: center;
+            }
+
+            @media (max-width: 768px) {
+                .folder-section {
+                    margin: 10px;
+                    padding: 10px;
+                }
+
+                #searchInput {
+                    width: 80%;
+                }
+
+                .folder-table td {
+                    padding: 8px;
+                }
+            }
+        </style>
+        <script>
+            function searchTable() {
+                var input = document.getElementById('searchInput');
+                var filter = input.value.toLowerCase();
+                var tables = document.getElementsByClassName('folder-table');
+
+                for (var t = 0; t < tables.length; t++) {
+                    var tr = tables[t].getElementsByTagName('tr');
+                    for (var i = 1; i < tr.length; i++) {
+                        var td = tr[i].getElementsByClassName('searchable')[0];
+                        if (td) {
+                            var txtValue = td.textContent || td.innerText;
+                            if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                                tr[i].style.display = '';
+                                td.innerHTML = td.innerHTML.replace(/<mark class="highlight">(.*?)<\/mark>/g, "$1");
+                                if (filter) {
+                                    var regex = new RegExp('(' + filter + ')', 'gi');
+                                    td.innerHTML = td.innerHTML.replace(regex, '<mark class="highlight">$1</mark>');
+                                }
+                            } else {
+                                tr[i].style.display = 'none';
+                            }
+                        }
+                    }
+                }
+            }
+
+            function clearSearch() {
+                document.getElementById('searchInput').value = '';
+                searchTable();
+            }
+        </script>
+    </head>
+    <body>
+        <div id="searchContainer">
+            <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="ابحث في المحتويات...">
+            <button id="clearSearch" onclick="clearSearch()">مسح</button>
+        </div>
+        <header class="main-header">
+            <h1> DesignLibrary Contents فهرس مكتبة التصميم</h1>
+            <p>الروابط مفعلة للأعضاء المشتركين</p>
+            <p>Vip  عرض 11 تيرا جوجل درايف</p>
+            <p>+201067498965</p>
+
+        </header>
+    
+        <div class="folder-section">
+            <div class="folder-header">
+                <h2>محتويات مجلد: طباعة الماج</h2>
+                <div class="folder-stats">
+                    <span>الحجم الكلي: 4.45 GB</span>
+                    <span class="separator">|</span>
+                    <span>إجمالي عدد الملفات: 1667</span>
+                </div>
+            </div>
+            <table class="folder-table">
+                <thead>
+                    <tr>
+                        <th>رقم</th>
+                        <th>اسم المجلد والتفاصيل</th>
+                        <th>رابط المجلد</th>
+                    </tr>
+                </thead>
+                <tbody>
+    
+            <tr>
+                <td class="index-cell">1</td>
+                <td class="searchable details-cell">
+            <div class="folder-info">
+                <div class="folder-name">مجموعة 2</div>
+                <div class="folder-details">
+                    <span>حجم المجلد: 197.49 MB</span>
+                    <span class="separator">|</span>
+                    <span>عدد الملفات: 35</span>
+                </div>
+                <div class="folder-extensions">الامتدادات: jpg, rar</div>
+            </div>
+        </td>
+                <td class="link-cell"><a href="https://drive.google.com/open?id=1qdqjUHwucNGqHUaLUTQuqFgPIR9VYv6d" class="folder-link">فتح المجلد</a></td>
+            </tr>
+        
+            <tr>
+                <td class="index-cell">2</td>
+                <td class="searchable details-cell">
+            <div class="folder-info">
+                <div class="folder-name">ValatineDay Designs</div>
+                <div class="folder-details">
+                    <span>حجم المجلد: 882.17 MB</span>
+                    <span class="separator">|</span>
+                    <span>عدد الملفات: 323</span>
+                </div>
+                <div class="folder-extensions">الامتدادات:  , ,, d, g, i, j, n, p, s</div>
+            </div>
+        </td>
+                <td class="link-cell"><a href="https://drive.google.com/open?id=1HtajQx6yzoO7ARt7UkSWkblvkJJbdAfT" class="folder-link">فتح المجلد</a></td>
+            </tr>
+        
+            <tr>
+                <td class="index-cell">3</td>
+                <td class="searchable details-cell">
+            <div class="folder-info">
+                <div class="folder-name">CDR Files Bundle</div>
+                <div class="folder-details">
+                    <span>حجم المجلد: 1.69 GB</span>
+                    <span class="separator">|</span>
+                    <span>عدد الملفات: 1124</span>
+                </div>
+                <div class="folder-extensions">الامتدادات:  , ,, c, d, e, f, g, n, p, r, s</div>
+            </div>
+        </td>
+                <td class="link-cell"><a href="https://drive.google.com/open?id=1tqORme6K4WAC9Wj79gXMwiVEJhmeYvmt" class="folder-link">فتح المجلد</a></td>
+            </tr>
+        
+            <tr>
+                <td class="index-cell">4</td>
+                <td class="searchable details-cell">
+            <div class="folder-info">
+                <div class="folder-name">3DCups</div>
+                <div class="folder-details">
+                    <span>حجم المجلد: 1.30 GB</span>
+                    <span class="separator">|</span>
+                    <span>عدد الملفات: 122</span>
+                </div>
+                <div class="folder-extensions">الامتدادات:  , ,, d, f, g, j, jpg, n, p, png, s, zip</div>
+            </div>
+        </td>
+                <td class="link-cell"><a href="https://drive.google.com/open?id=1GMNUamZX0upTsjK1dTjUg_IBhuOJ17t4" class="folder-link">فتح المجلد</a></td>
+            </tr>
+        
+            <tr>
+                <td class="index-cell">5</td>
+                <td class="searchable details-cell">
+            <div class="folder-info">
+                <div class="folder-name">طباعة الماج</div>
+                <div class="folder-details">
+                    <span>حجم المجلد: 302.65 MB</span>
+                    <span class="separator">|</span>
+                    <span>عدد الملفات: 43</span>
+                </div>
+                <div class="folder-extensions">الامتدادات: jpg, rar</div>
+            </div>
+        </td>
+                <td class="link-cell"><a href="https://drive.google.com/open?id=1Eqt59nTrLkrb96DmvWtk1NUxk6UFwbFa" class="folder-link">فتح المجلد</a></td>
+            </tr>
+        
+            <tr>
+                <td class="index-cell">6</td>
+                <td class="searchable details-cell">
+            <div class="folder-info">
+                <div class="folder-name">مجات المهن</div>
+                <div class="folder-details">
+                    <span>حجم المجلد: 109.24 MB</span>
+                    <span class="separator">|</span>
+                    <span>عدد الملفات: 20</span>
+                </div>
+                <div class="folder-extensions">الامتدادات: jpg, psd</div>
+            </div>
+        </td>
+                <td class="link-cell"><a href="https://drive.google.com/open?id=1heHqP9y_IuaqhpHlZePMg_nbFxlEJI-C" class="folder-link">فتح المجلد</a></td>
+            </tr>
+        </tbody></table></div></body></html>
